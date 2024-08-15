@@ -1,0 +1,19 @@
+
+.separator {
+  margin: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.pizza-card .mt-auto {
+  margin-top: auto;
+}
+
+.separator {
+  border-bottom: 1px solid #d0d0d0; 
+  margin-left: -16px; 
+  margin-right: -16px; 
+}
+.ingredients-desc{
+	height:100px;
+	text-align: center;
+}
