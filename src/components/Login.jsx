@@ -21,7 +21,7 @@ export const Login = () => {
             setEmail('');
             setPassword('');
         } else {
-            alert('Password must be at least 5 characters');
+            alert('Password must be at least 6 characters');
         }
     }
 
@@ -31,7 +31,7 @@ export const Login = () => {
 	<div className='row'>
 <div className="col-lg-6 col-xs-12 p-5 mx-auto">
                         <form className="m-5" onSubmit={handleSubmit}>
-														<h1 style={{paddingTop:'70px', color: '#000',textAlign:'left'}} >Register</h1>
+														<h1 style={{paddingTop:'70px', color: '#000',textAlign:'left'}} >Login</h1>
                             <div className="form-group my-3">
                                 <label >Email:</label>
                                 <input
