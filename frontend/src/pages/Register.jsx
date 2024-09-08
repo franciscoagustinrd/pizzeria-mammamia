@@ -34,9 +34,10 @@ const Register = () => {
 
  return (
   <>
+  <div className="footer-fix">
    <div className="container">
     <div className="row">
-     <div className="col-lg-6 col-xs-12 p-5 mx-auto">
+     <div className="col-lg-6 col-xs-12 p-5 mx-auto ">
       <h1 style={{ paddingTop: "70px", color: "#000", textAlign: "left" }}>
        Register
       </h1>
@@ -98,6 +99,7 @@ const Register = () => {
       </Form>
      </div>
     </div>
+   </div>
    </div>
   </>
  );

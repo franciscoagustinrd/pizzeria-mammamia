@@ -27,7 +27,8 @@ const Pizza = () => {
   }
 
   return (
-    <div className="d-flex justify-content-center align-items-center">
+    <div className="d-flex justify-content-center align-items-center footer-fix
+    ">
     <Container className="m-3">
     <Row className="border rounded align-items-center">
       <Col>

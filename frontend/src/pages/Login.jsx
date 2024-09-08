@@ -26,7 +26,7 @@ export const Login = () => {
 
  return (
   <>
-   <div className="container">
+   <div className="container footer-fix">
     <div className="row">
      <div className="col-lg-6 col-xs-12 p-5 mx-auto">
       <form className="m-5" onSubmit={handleSubmit}>

@@ -1,7 +1,7 @@
 import { Container, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import Pizza from "./components/Pizza";
-import PizzaCart from './components/PizzaCart';
+import Pizza from "./Pizza";
+import PizzaCart from '../components/PizzaCart';
 
 function Home() {
   const [pizzaList, setPizzaList] = useState([]);
