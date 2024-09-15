@@ -10,10 +10,12 @@ import Footer from "./components/Footer";
 import Profile from "./pages/Profile"; 
 import NotFound from "./components/NotFound"; 
 import { Route, Routes } from "react-router-dom";
+import { CartProvider } from './context/CartContext.jsx';
 
 export default function App() {
   return (
     <div>
+      <CartProvider>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -25,6 +27,7 @@ export default function App() {
         <Route path="/404" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </CartProvider>
       <Footer />
     </div>
   );

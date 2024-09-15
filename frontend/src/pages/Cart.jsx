@@ -1,35 +1,21 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import PizzaCart from "../components/PizzaCart.jsx";
-import { pizzaCart as pizzas } from "../data/pizzas.js";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { CartContext } from "../context/CartContext";
+import { formatPrice } from "../utils/utils";
 
 function Cart() {
- const [selectedPizzas, setSelectedPizzas] = useState([]);
+ const { cart, addToCart, removeFromCart, totalPrice } =
+  useContext(CartContext);
 
- const handleCountChange = (pizzaId, newCount) => {
-  const pizza = pizzas.find((p) => p.id === pizzaId);
+ const handleCountChange = (pizza, delta) => {
+  const newCount = pizza.quantity + delta;
 
-  setSelectedPizzas((prevSelectedPizzas) => {
-   if (newCount === 0) {
-    return prevSelectedPizzas.filter((p) => p.id !== pizzaId);
-   } else {
-    const pizzaExists = prevSelectedPizzas.find((p) => p.id === pizzaId);
-    if (pizzaExists) {
-     return prevSelectedPizzas.map((p) =>
-      p.id === pizzaId ? { ...p, count: newCount } : p
-     );
-    } else {
-     return [...prevSelectedPizzas, { ...pizza, count: newCount }];
-    }
-   }
-  });
- };
-
- const calculateTotal = () => {
-  return selectedPizzas.reduce(
-   (total, pizza) => total + pizza.price * pizza.count,
-   0
-  );
+  if (newCount <= 0) {
+   removeFromCart(pizza.id);
+  } else {
+   addToCart(pizza);
+  }
  };
 
  return (
@@ -40,12 +26,12 @@ function Cart() {
     </Col>
    </Row>
    <Row>
-    {pizzas.map((pizza) => (
+    {cart.map((pizza) => (
      <Col key={pizza.id} xs={12} sm={6} md={3} lg={3} className="mb-4">
       <PizzaCart
        pizza={pizza}
-       onCountChange={handleCountChange}
-       initialCount={selectedPizzas.find((p) => p.id === pizza.id)?.count || 0}
+       onCountChange={(delta) => handleCountChange(pizza, delta)}
+       initialCount={pizza.quantity}
       />
      </Col>
     ))}
@@ -55,14 +41,14 @@ function Cart() {
     <Col className="text-center justify-content-center p-2">
      <h2>Tu pedido</h2>
      <ul className="list-group w-75 mx-auto">
-      {selectedPizzas.map((pizza) => (
+      {cart.map((pizza) => (
        <li className="list-group-item" key={pizza.id}>
-        {pizza.name}: {pizza.count}
+        {pizza.name}: {pizza.quantity}
        </li>
       ))}
      </ul>
      <h4 className="mt-2">Total a pagar</h4>
-     <h3 className="text-danger">${calculateTotal()}</h3>
+     <h3 className="text-danger">${formatPrice(totalPrice)}</h3>
      <Button variant="danger" className="mt-2 mb-3" size="lg">
       Pagar tu pizza{" "}
      </Button>
@@ -73,5 +59,3 @@ function Cart() {
 }
 
 export default Cart;
-
-
