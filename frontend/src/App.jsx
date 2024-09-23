@@ -11,23 +11,34 @@ import Profile from "./pages/Profile";
 import NotFound from "./components/NotFound"; 
 import { Route, Routes } from "react-router-dom";
 import { CartProvider } from './context/CartContext.jsx';
+import UserProvider from './context/UserContext.jsx';
+import AuthGuard from "./guard/AuthGuard.jsx";
 
 export default function App() {
   return (
     <div>
-      <CartProvider>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/pizza/p001" element={<Pizza />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/404" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      </CartProvider>
+   <UserProvider>
+        <CartProvider>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/pizza/:id" element={<Pizza />} />
+            <Route
+              path="/profile"
+              element={
+                <AuthGuard>
+                  <Profile />
+                </AuthGuard>
+              }
+            />
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </CartProvider>
+      </UserProvider>
       <Footer />
     </div>
   );
