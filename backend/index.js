@@ -6,6 +6,7 @@ import authRoute from "./routes/auth.route.js";
 import checkoutRoute from "./routes/checkout.route.js";
 import pizzaRoute from "./routes/pizza.route.js";
 
+
 const app = express();
 
 app.use(express.json());

@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 const AuthGuard = ({ children }) => {
- const { user } = useContext(UserContext);
+ const { token } = useContext(UserContext);
 
- if (!user.token) {
+ if (!token) {
   return <Navigate to="/login" />;
  }
 

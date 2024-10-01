@@ -1,18 +1,63 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import PizzaCart from "../components/PizzaCart.jsx";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap"; 
 import { CartContext } from "../context/CartContext";
 import { UserContext } from "../context/UserContext"; 
 import { formatPrice } from "../utils/utils";
 
 function Cart() {
-    const { cart, addToCart, updateCart, totalPrice } = useContext(CartContext);
-    const { user } = useContext(UserContext);
+    const { cart, updateCart, removeFromCart, totalPrice } = useContext(CartContext);
+    const { token } = useContext(UserContext);
+    const [loading, setLoading] = useState(false); 
+    const [message, setMessage] = useState(null); 
 
-     const handleCountChange = (pizza, delta) => {
-      const newCount = pizza.quantity + delta;
-      updateCart(pizza, newCount); 
+    const handleCountChange = (pizza, delta) => {
+        const newCount = pizza.quantity + delta;
+        updateCart(pizza, newCount); 
     };
+
+    const handlePayment = async () => {
+        if (!token) {
+            alert("Debes iniciar sesión para realizar el pago."); 
+            return;
+        }
+
+        if (cart.length === 0) {
+            setMessage("😔 No has agregado ninguna pizza al carro"); 
+            return;
+        }
+
+        setLoading(true);
+        setMessage(null);
+
+        try {
+            const response = await fetch('http://localhost:5000/api/checkouts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, 
+                },
+                body: JSON.stringify({ cart }), 
+            });
+
+            if (!response.ok) {
+                const errorResult = await response.json(); 
+                throw new Error(errorResult.message || 'Error al procesar el pago');
+            }
+
+            const result = await response.json();
+            setMessage("¡Listo! Ya pediste tus pizzas, te mantendremos al tanto del estado de tu pedido.");
+            cart.forEach(pizza => removeFromCart(pizza.id)); 
+
+            console.log("Compra realizada con éxito:", result);
+        } catch (error) {
+            console.error(error);
+            setMessage("Hubo un error al procesar tu pago. Inténtalo de nuevo.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <Container>
             <Row>
@@ -44,15 +89,41 @@ function Cart() {
                     </ul>
                     <h4 className="mt-2">Total a pagar</h4>
                     <h3 className="text-danger">${formatPrice(totalPrice)}</h3>
-                    
-                    <Button
-                        variant="danger"
-                        className="mt-2 mb-3"
-                        size="lg"
-                        disabled={!user.token}
-                    >
-                        Pagar tu pizza
-                    </Button>
+
+                    {!token ? (
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={
+                                <Tooltip>
+                                    Debes loguearte para pagar
+                                </Tooltip>
+                            }
+                        >
+                            <span>
+                                <Button
+                                    variant="danger"
+                                    className="mt-2 mb-3"
+                                    size="lg"
+                                    onClick={handlePayment}
+                                    disabled={!token || loading}
+                                >
+                                    {loading ? "Procesando..." : "Pagar"}
+                                </Button>
+                            </span>
+                        </OverlayTrigger>
+                    ) : (
+                        <Button
+                            variant="danger"
+                            className="mt-2 mb-3"
+                            size="lg"
+                            onClick={handlePayment}
+                            disabled={loading}
+                        >
+                            {loading ? "Procesando..." : "Pagar"}
+                        </Button>
+                    )}
+
+                    {message && <p>{message}</p>} {/* Se muestra el mensaje de éxito o error */}
                 </Col>
             </Row>
         </Container>

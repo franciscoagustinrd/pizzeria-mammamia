@@ -1,15 +1,46 @@
-import { useContext } from "react";
-import { Navigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../context/UserContext'; 
+import { Navigate } from 'react-router-dom';
 import profileImage from "../assets/profile-sample.png";
 
-export default function Profile() {
- const { user, logout } = useContext(UserContext);
+function Profile() {
+  const { token, logout, getProfile } = useContext(UserContext); 
+  const [email, setEmail] = useState(''); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false); 
 
- if (!user.token) {
-  return <Navigate to="/login" />;
- }
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await getProfile(); 
+        if (profile && profile.email) {
+          setEmail(profile.email); 
+        } else {
+          setError(true); 
+        }
+      } catch (error) {
+        console.error("Error al obtener el perfil:", error);
+        setError(true);
+      } finally {
+        setLoading(false); 
+      }
+    };
 
+    if (token) {
+      fetchProfile();
+    } else {
+      setLoading(false); 
+    }
+  }, [getProfile, token]);
+
+
+  if (loading) {
+    return <p>Cargando perfil...</p>;
+  }
+
+  if (!token || error) {
+    return <Navigate to="/login" />;
+  }
  return (
   <div className="footer-fix">
    <div className="container text-center mt-5 pt-5">
@@ -20,12 +51,12 @@ export default function Profile() {
      alt="Perfil"
     />
     <h5 className="mb-2">
-     <strong>Francisco Romero</strong>
+     <strong>Nombre Apellido</strong>
     </h5>
     <p className="text-muted">
      Pizzaiolo <span className="badge bg-primary">Primerizo</span>
     </p>
-    <h4>francisco@gmail.com</h4>
+    <h4>{email}</h4>
     <button className="btn btn-outline-danger mt-2" onClick={logout}>
      Cerrar sesión
     </button>
@@ -33,3 +64,4 @@ export default function Profile() {
   </div>
  );
 }
+export default Profile;
