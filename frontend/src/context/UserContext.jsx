@@ -32,6 +32,7 @@ const register = async (email, password) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
+    alert("Registro creado 🙌 ")
     const data = await res.json();
     if (res.ok) {
       setToken(data.token); 

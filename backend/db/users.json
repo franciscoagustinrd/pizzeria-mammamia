@@ -18,5 +18,15 @@
     "email": "test@example.com",
     "password": "123123",
     "id": "NW_HkHTraZQZkCJc5AGLX"
+  },
+  {
+    "email": "prueba@prueba.com",
+    "password": "123123",
+    "id": "WcLz-hgbRiftHrvJp_CEp"
+  },
+  {
+    "email": "prueba@prueba.cl",
+    "password": "123123",
+    "id": "NyIQEd-XYLDKD0QZ_uDuE"
   }
 ]
